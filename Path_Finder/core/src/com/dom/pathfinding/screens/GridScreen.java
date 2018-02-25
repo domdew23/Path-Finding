@@ -11,7 +11,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.dom.pathfinding.grid.Dijkstra;
+import com.dom.pathfinding.algorithms.AStar;
+import com.dom.pathfinding.algorithms.Dijkstra;
 import com.dom.pathfinding.settings.Control;
 
 public class GridScreen implements Screen {
@@ -27,15 +28,16 @@ public class GridScreen implements Screen {
 	private final Dijkstra d;
 	private ArrayList<int[]> shortestPath;
 	private int srcX, srcY, goalX, goalY;
-	private boolean srcSet, goalSet, done;
+	private boolean srcSet, goalSet, done, doDijkstra, doAStar;
+	private final AStar a;
 	
 	public GridScreen() {
 		this.camera = new OrthographicCamera();
 		this.viewPort = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		this.camera.position.set(viewPort.getWorldWidth(), viewPort.getWorldHeight(), 0);
 		this.batch = new SpriteBatch();
-		this.width = 40;
-		this.height = 40;
+		this.width = 100;
+		this.height = 100;
 		this.cellWidth= Gdx.graphics.getWidth() / width;
 		this.cellHeight = Gdx.graphics.getHeight() / height;
 		this.c = new Control(width, height);
@@ -48,8 +50,11 @@ public class GridScreen implements Screen {
 		this.goalY = -1;
 		this.srcSet = false;
 		this.goalSet = false;
+		this.doDijkstra = false;
+		this.doAStar = true;
 		this.done = false;
 		this.d = new Dijkstra(c.getNodes(), c.getTeleports(), c.getTeleportCount(), width, height);
+		this.a = new AStar(c.getNodes(), c.getTeleports(), c.getTeleportCount(), width, height);
 		this.shortestPath = new ArrayList<int[]>();
 	}
 	
@@ -63,6 +68,7 @@ public class GridScreen implements Screen {
 			srcY = Gdx.input.getY()/cellHeight;
 			clicked[srcX][srcY] = true;
 			srcSet = true;
+			System.out.println("Src Set.");
 			try { Thread.sleep(250);}catch (InterruptedException e) {}
 		} else if (Gdx.input.isButtonPressed(Input.Buttons.LEFT) && srcSet && !done) {
 			goalX = Gdx.input.getX()/cellWidth;
@@ -70,12 +76,13 @@ public class GridScreen implements Screen {
 			if (goalX == srcX && goalY == srcY) return;
 			clicked[goalX][goalY] = true;
 			goalSet = true;
+			System.out.println("Goal Set.");
 			try {Thread.sleep(250);}catch (InterruptedException e) {}
 		}
 	}
 
 	public void render(float delta) {
-		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		handleInput(delta);
@@ -86,8 +93,14 @@ public class GridScreen implements Screen {
 			done = true;
 			srcSet = false;
 			goalSet = false;
-			d.run(srcX, srcY, goalX, goalY);
-			shortestPath = d.getShortestPath();
+			if (doDijkstra) {
+				d.run(srcX, srcY, goalX, goalY);
+				shortestPath = d.getShortestPath();
+			} else if (doAStar) {
+				a.run(srcX, srcY, goalX, goalY);
+				shortestPath = a.getShortestPath();
+			}
+		
 		}
 		batch.begin();
 		draw();
@@ -98,9 +111,11 @@ public class GridScreen implements Screen {
 	private void draw() {
 		for (int y=0, i=height-1; y < height * cellHeight && i >= 0; y+=cellHeight, i--) {
 			for (int x=0, j=0; x < width * cellWidth && j < width; x+=cellWidth, j++) {
-				int node = c.getNodes()[j][i];
+				byte node = c.getNodes()[j][i];
 				Texture t = null;
-				if (shortestPath.size() != 0) t = drawShortest(i, j, node);
+				if (shortestPath.size() != 0) {
+					t = drawShortest(i, j, node);
+				}
 				else if (clicked[j][i] && node != 10) t = textures[11];
 				else t = textures[node];
 				batch.draw(t, x, y, cellWidth, cellHeight);
@@ -110,14 +125,14 @@ public class GridScreen implements Screen {
 	
 	private Texture drawShortest(int i, int j, int node) {
 		Texture t = null;
-		for (int[] a : shortestPath) {
-			if (a[0] == j && a[1] == i) {
+		for (int[] path : shortestPath) {
+			if (path[0] == j && path[1] == i) {
 				t = textures[13];
 				break;
 			} else if (clicked[j][i] && node != 10) {
 				t = textures[11];
-			//} //else if (d.getVistited()[j][i]){
-				//t = textures[12];
+			} else if (a.getVisited()[j][i]){
+				t = textures[12];
 			} else {
 				t = textures[node];
 			}

@@ -1,4 +1,4 @@
-package com.dom.pathfinding.grid;
+package com.dom.pathfinding.algorithms;
 
 import java.util.ArrayList;
 
@@ -51,16 +51,22 @@ public class Dijkstra {
 		while (!queue.isEmpty()) {
 			int[] node = queue.pull();
 			int x=node[0], y=node[1];
-			if (x == goalX && y == goalY) return;
+			if (x == goalX && y == goalY) break;
 			
 			if (graph[x][y] == 0) {
 				handleTeleport(x, y);
 			}
 			
+			/* check all neighbors */
 			if (x+1 < width) check(x, y, x+1, y);
 			if (x-1 >= 0) check(x, y, x-1,y);
 			if (y+1 < height) check(x, y, x, y+1);
 			if (y-1 >= 0) check(x, y, x, y-1);
+			if (x-1 >= 0 && y-1 >= 0) check(x, y, x-1, y-1);
+			if (x-1 >= 0 && y+1 < height) check(x, y, x-1, y+1);
+			if (x+1 < width && y-1 >= 0) check(x, y, x+1, y-1);
+			if (x+1 < width && y+1 < height) check(x, y, x+1, y+1);
+			
 			visited[x][y] = true;
 		}
 	}
@@ -74,7 +80,7 @@ public class Dijkstra {
 			distances[x][y] = altDist;
 			int[] coords = {currentX, currentY};
 			path[x][y] = coords;
-			queue.put(x, y, graph[x][y]);
+			queue.put(x, y, distances[x][y]);
 		}
 	}
 	
@@ -113,10 +119,7 @@ public class Dijkstra {
 	
 	public ArrayList<int[]> getShortestPath() {
 		ArrayList<int[]> pathSteps = new ArrayList<int[]>();
-		int[] start = {goalX, goalY};
 		int[] nextHop = {path[goalX][goalY][0], path[goalX][goalY][1]};
-		
-		pathSteps.add(start);
 		pathSteps.add(nextHop);
 		
 		while (nextHop[0] != srcX || nextHop[1] != srcY) {
@@ -124,6 +127,7 @@ public class Dijkstra {
 			nextHop = tmp;
 			pathSteps.add(nextHop);
 		}
+		pathSteps.remove(pathSteps.size()-1);
 		return pathSteps;
 	}
 	
@@ -135,7 +139,7 @@ public class Dijkstra {
 		return path;
 	}
 	
-	public boolean[][] getVistited(){
+	public boolean[][] getVisited(){
 		return visited;
 	}
 }

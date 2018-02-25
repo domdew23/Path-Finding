@@ -3,22 +3,22 @@ package com.dom.pathfinding.tools;
 public class PriorityQueue {
 	private int DEFAULT_INIT_SIZE = 50;
 	private int[][] nodes;
-	private int[] dists;
+	private double[] dists;
 	private int size;
 
 	public PriorityQueue(int initSize){
 		nodes = new int[initSize + 1][2];
-		dists = new int[initSize + 1];
+		dists = new double[initSize + 1];
 		size = 0;
 	}
 	
 	public PriorityQueue() {
 		nodes = new int[DEFAULT_INIT_SIZE + 1][2];
-		dists = new int[DEFAULT_INIT_SIZE + 1];
+		dists = new double[DEFAULT_INIT_SIZE + 1];
 		size = 0;
 	}
 
-	public void put(int x, int y, int dist){
+	public void put(int x, int y, double dist){
 		if (size == nodes.length - 1){
 			reSize();
 		}
@@ -30,9 +30,9 @@ public class PriorityQueue {
 
 	private void reSize(){
 		int[][] oldNodes = nodes;
-		int[] oldDists = dists;
+		double[] oldDists = dists;
 		nodes = new int[nodes.length * 2][2];
-		dists = new int[dists.length * 2];
+		dists = new double[dists.length * 2];
 		System.arraycopy(oldNodes, 1, nodes, 1, size);
 		System.arraycopy(oldDists, 1, dists, 1, size);
 	}
@@ -43,7 +43,7 @@ public class PriorityQueue {
 
 	private void siftUp(int i, int j){
 		int[] tmpNode = nodes[i];
-		int tmpDist = dists[i];
+		double tmpDist = dists[i];
 
 		nodes[i] = nodes[j];
 		nodes[j] = tmpNode;
@@ -113,6 +113,15 @@ public class PriorityQueue {
 		nodes[size + 1] = null;
 		dists[size + 1] = -1;
 		siftDown(index);
+	}
+	
+	public boolean contains(int x, int y) {
+		for (int i = 1; i  < size; i++) {
+			if (nodes[i][0] == x && nodes[i][0] == y) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public void update(int x, int y, int dist) {

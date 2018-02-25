@@ -2,7 +2,7 @@ package com.dom.pathfinding.settings;
 
 import java.util.Random;
 
-import com.dom.pathfinding.grid.Dijkstra;
+import com.dom.pathfinding.algorithms.Dijkstra;
 
 public class Control {
 	
@@ -23,6 +23,7 @@ public class Control {
 		this.count = 0;
 		this.handlesTeleports = false;
 		generateMap();
+		printNodes();
 	}
 
 	private void generateMap(){
