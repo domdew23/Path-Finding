@@ -27,9 +27,9 @@ public class Dijkstra extends SearchAlgorithm {
 		
 		int altDist = distances[currentX][currentY] + graph[neighborX][neighborY];
 		if (altDist < distances[neighborX][neighborY]) {
+			cameFrom[neighborX][neighborY][0] = currentX;
+			cameFrom[neighborX][neighborY][1] = currentY;
 			distances[neighborX][neighborY] = altDist;
-			int[] coords = {currentX, currentY};
-			cameFrom[neighborX][neighborY] = coords;
 			queue.put(neighborX, neighborY, distances[neighborX][neighborY]);
 		}
 	}

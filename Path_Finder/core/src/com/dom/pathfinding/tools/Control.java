@@ -1,8 +1,6 @@
-package com.dom.pathfinding.settings;
+package com.dom.pathfinding.tools;
 
 import java.util.Random;
-
-import com.dom.pathfinding.algorithms.Dijkstra;
 
 public class Control {
 	
@@ -73,26 +71,5 @@ public class Control {
 	
 	public int getTeleportCount() {
 		return count;
-	}
-	
-	public void printTeleports() {
-		for (int i = 0; i < count; i++) {
-			int x1 = teleports[i][0][0];
-			int y1 = teleports[i][0][1];
-			int x2 = teleports[i][1][0];
-			int y2 = teleports[i][1][1];
-			System.out.println("Node: " + x1 + " " + y1 + " - Teleports to " + x2 + " " + y2);
-		}
-	}
-
-	public void printNodes(){
-		System.out.println("Nodes:\n");
-		for (int x = 0; x < width; x++){
-			for (int y = 0; y < height; y++){
-				if (nodes[y][x] == 10) System.out.print("F ");
-				else System.out.print(nodes[y][x] + " ");
-			}
-			System.out.println();
-		}	
 	}
 }

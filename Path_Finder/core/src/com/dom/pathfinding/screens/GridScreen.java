@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.dom.pathfinding.algorithms.AStar;
 import com.dom.pathfinding.algorithms.Dijkstra;
-import com.dom.pathfinding.settings.Control;
+import com.dom.pathfinding.tools.Control;
 
 public class GridScreen implements Screen {
 
@@ -36,8 +36,8 @@ public class GridScreen implements Screen {
 		this.viewPort = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		this.camera.position.set(viewPort.getWorldWidth(), viewPort.getWorldHeight(), 0);
 		this.batch = new SpriteBatch();
-		this.width = 50;
-		this.height = 50;
+		this.width = 10;
+		this.height = 10;
 		this.cellWidth= Gdx.graphics.getWidth() / width;
 		this.cellHeight = Gdx.graphics.getHeight() / height;
 		this.c = new Control(width, height);
@@ -50,8 +50,8 @@ public class GridScreen implements Screen {
 		this.goalY = -1;
 		this.srcSet = false;
 		this.goalSet = false;
-		this.doDijkstra = true;
-		this.doAStar = false;
+		this.doDijkstra = false;
+		this.doAStar = true;
 		this.done = false;
 		this.d = new Dijkstra(c.getNodes(), c.getTeleports(), c.getTeleportCount(), width, height);
 		this.a = new AStar(c.getNodes(), c.getTeleports(), c.getTeleportCount(), width, height);
