@@ -36,8 +36,8 @@ public class GridScreen implements Screen {
 		this.viewPort = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		this.camera.position.set(viewPort.getWorldWidth(), viewPort.getWorldHeight(), 0);
 		this.batch = new SpriteBatch();
-		this.width = 100;
-		this.height = 100;
+		this.width = 50;
+		this.height = 50;
 		this.cellWidth= Gdx.graphics.getWidth() / width;
 		this.cellHeight = Gdx.graphics.getHeight() / height;
 		this.c = new Control(width, height);
@@ -50,8 +50,8 @@ public class GridScreen implements Screen {
 		this.goalY = -1;
 		this.srcSet = false;
 		this.goalSet = false;
-		this.doDijkstra = false;
-		this.doAStar = true;
+		this.doDijkstra = true;
+		this.doAStar = false;
 		this.done = false;
 		this.d = new Dijkstra(c.getNodes(), c.getTeleports(), c.getTeleportCount(), width, height);
 		this.a = new AStar(c.getNodes(), c.getTeleports(), c.getTeleportCount(), width, height);
@@ -86,8 +86,6 @@ public class GridScreen implements Screen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		handleInput(delta);
-
-		//batch.setProjectionMatrix(this.camera.combined);
 		
 		if (srcSet && goalSet) {
 			done = true;
@@ -100,7 +98,6 @@ public class GridScreen implements Screen {
 				a.run(srcX, srcY, goalX, goalY);
 				shortestPath = a.getShortestPath();
 			}
-		
 		}
 		batch.begin();
 		draw();
@@ -131,7 +128,9 @@ public class GridScreen implements Screen {
 				break;
 			} else if (clicked[j][i] && node != 10) {
 				t = textures[11];
-			} else if (a.getVisited()[j][i]){
+			} else if (doAStar && a.getVisited()[j][i]){
+				t = textures[12];
+			} else if (doDijkstra && d.getVisited()[j][i]) {
 				t = textures[12];
 			} else {
 				t = textures[node];

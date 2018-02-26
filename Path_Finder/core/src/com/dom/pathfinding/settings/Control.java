@@ -21,9 +21,8 @@ public class Control {
 		this.teleports = new int[width*height][2][2];
 		this.last = new int[2];
 		this.count = 0;
-		this.handlesTeleports = false;
+		this.handlesTeleports = true;
 		generateMap();
-		printNodes();
 	}
 
 	private void generateMap(){
