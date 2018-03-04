@@ -36,8 +36,8 @@ public class GridScreen implements Screen {
 		this.viewPort = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		this.camera.position.set(viewPort.getWorldWidth(), viewPort.getWorldHeight(), 0);
 		this.batch = new SpriteBatch();
-		this.width = 10;
-		this.height = 10;
+		this.width = 20;
+		this.height = 20;
 		this.cellWidth= Gdx.graphics.getWidth() / width;
 		this.cellHeight = Gdx.graphics.getHeight() / height;
 		this.c = new Control(width, height);

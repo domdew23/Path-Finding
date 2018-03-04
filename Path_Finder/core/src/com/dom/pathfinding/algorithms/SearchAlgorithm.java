@@ -35,11 +35,11 @@ public abstract class SearchAlgorithm {
 				return;
 			}
 			
+			loopNeighbors(x, y);
+
 			if (graph[x][y] == 0) {
 				handleTeleport(x, y);
 			}
-			
-			loopNeighbors(x, y);
 		}
 	}
 	
@@ -48,10 +48,10 @@ public abstract class SearchAlgorithm {
 		if (x-1 >= 0) check(x, y, x-1,y);
 		if (y+1 < height) check(x, y, x, y+1);
 		if (y-1 >= 0) check(x, y, x, y-1);
-		if (x-1 >= 0 && y-1 >= 0) check(x, y, x-1, y-1);
+		/*if (x-1 >= 0 && y-1 >= 0) check(x, y, x-1, y-1);
 		if (x-1 >= 0 && y+1 < height) check(x, y, x-1, y+1);
 		if (x+1 < width && y-1 >= 0) check(x, y, x+1, y-1);
-		if (x+1 < width && y+1 < height) check(x, y, x+1, y+1);
+		if (x+1 < width && y+1 < height) check(x, y, x+1, y+1);*/
 	}
 	
 	protected void handleTeleport(int x, int y) {

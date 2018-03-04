@@ -19,7 +19,7 @@ public class Control {
 		this.teleports = new int[width*height][2][2];
 		this.last = new int[2];
 		this.count = 0;
-		this.handlesTeleports = true;
+		this.handlesTeleports = false;
 		generateMap();
 	}
 
@@ -44,7 +44,7 @@ public class Control {
 					}
 				} else {
 					while (nextByte == options[options.length-1]) nextByte = (byte) options[r.nextInt(options.length)];
-					nodes[x][y] = nextByte;
+					nodes[x][y] = 1;
 				}
 			}
 		}
